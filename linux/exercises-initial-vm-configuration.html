@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>exercises-initial-vm-configuration.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="basic-linux-setup-of-virtual-server"><strong>Basic Linux Setup of Virtual Server</strong></h1>
+<h2 id="introduction"><strong>Introduction</strong></h2>
+<h3 id="goals"><strong>Goals</strong></h3>
+<ul>
+<li>Initial VM Configuration</li>
+<li>We could do this for you, but it's important to understand how some of this software work with the tools you will be installing this week.</li>
+</ul>
+<h3 id="notes"><strong>Notes</strong></h3>
+<ul>
+<li>Commands preceded with &quot;$&quot; imply that you should execute the command as a general user - not as root.</li>
+<li>Commands preceded with &quot;#&quot; imply that you should be working as root.</li>
+<li>Commands with more specific command lines (e.g. &quot;rtrX&gt;&quot; or &quot;mysql&gt;&quot;) imply that you are executing commands on remote equipment, or within another program.</li>
+<li>If a command line ends with &quot;\&quot; this indicates that the command continues on the next line and you should treat this as a single line.</li>
+</ul>
+<hr>
+<h2 id="exercises"><strong>Exercises</strong></h2>
+<h3 id="update-your-software-package-repository"><strong>Update your software package repository</strong></h3>
+<p>Connect to your virtual machine (<strong>srvX.lab.npnog.org.np</strong>) as the user <strong><em>lab</em></strong> and then from the command line:</p>
+<pre class="hljs"><code><div>lab@srvX:~$ sudo apt update
+</div></code></pre>
+<p>This might take a few moments if everyone in class is doing this at the same moment.</p>
+<h3 id="install-the-%22nano%22-editor-package"><strong>Install the &quot;nano&quot; editor package:</strong></h3>
+<p><strong>NOTE:</strong> Some packages may already be installed. This is OK. Just continue to the next step in the exercises.</p>
+<pre class="hljs"><code><div>lab@srvX:~$ sudo apt install nano
+</div></code></pre>
+<p>The <em>nano</em> editor package is simpler to use than <em>vi</em>. Try using the editor to create a new file in your <strong><em>lab</em></strong> home directory:</p>
+<pre class="hljs"><code><div>lab@srvX:~$ <span class="hljs-built_in">cd</span>
+lab@srvX:~$ nano newfile.txt
+</div></code></pre>
+<p>Type in some text for practice. You can type &quot;ctrl-g&quot; to see a list of nano editor commands, that is &quot;press the ctrl key and the g key. You need to press 'ctrl-x' to exit the help screen.</p>
+<p>You can save and exit from the file by typing &quot;ctrl-x, then y&quot; and <code>&lt;ENTER&gt;</code> to accept the file name..</p>
+<h3 id="setting-time-to-utc-updating-time-and-install-network-time-protocol-service"><strong>Setting time to UTC, Updating time and install Network Time Protocol service</strong></h3>
+<p>In order to manage and monitor your network it is <em>critical</em> that all devices and servers maintain the same, consistent time. To achieve this you can, for example, select a single time zone, use the <em>ntpdate</em> command to set your server's clock exactly and install the NTP (Network Time Protocol) service to maintain your server's clock with precise time.</p>
+<p>First, let's set your server's clock to use UTC time (Coordinated Universal Time). At the command line type:</p>
+<pre class="hljs"><code><div>lab@srvX:~$ sudo dpkg-reconfigure tzdata
+</div></code></pre>
+<ul>
+<li>Scroll to the bottom of the list and select &quot;None of the above&quot;</li>
+<li>Scroll down the list and select &quot;UTC&quot;</li>
+<li>Use the tab key to select &quot;<code>&lt;Ok&gt;</code>&quot; and press <code>&lt;ENTER&gt;</code></li>
+</ul>
+<p>Now your server is using UTC time. Next be sure the time is precise by using ntpdate. First install ntpdate:</p>
+<pre class="hljs"><code><div>lab@srvX:~$ sudo apt install ntpdate
+</div></code></pre>
+<p>Now we'll update our local time against a remote time server:</p>
+<pre class="hljs"><code><div>lab@srvX:~$ sudo ntpdate -s ntp.lab.npnog.org.np
+</div></code></pre>
+<p>You can always type:</p>
+<pre class="hljs"><code><div>lab@srvX:~$ date
+</div></code></pre>
+<p>to see your server's current timezone (UTC, which is technically a standard), date and time.</p>
+<p>Finally, let's install the NTP service to ensure that our server's clock maintains precise time.</p>
+<pre class="hljs"><code><div>lab@srvX:~$ sudo apt install ntp ntpstat
+</div></code></pre>
+<p>At this point the default configuration should be acceptable for our case. You may wish to read up on ntp upon returning home and edit the file /etc/ntp.conf to select different time servers, or update settings to your local ntp service configuration.</p>
+<p>In addition, ntp has been part of several security warnings the past few years. You should sign up for the Ubuntu Security mailing list at:</p>
+<p><a href="https://lists.ubuntu.com/mailman/listinfo/ubuntu-security-announce">https://lists.ubuntu.com/mailman/listinfo/ubuntu-security-announce</a></p>
+<p>You should do this whether you run <em>ntp</em> or not. And, as ntp is so critical to proper network instrumentation, this is one service that should be run on any server that will be running network monitoring or management software or that will be monitored and on all your network devices.</p>
+<p>If you would like to see the status of your local ntp service you can type:</p>
+<pre class="hljs"><code><div>lab@srvX:~$ sudo ntpq -p
+</div></code></pre>
+<p>and you should see something like:</p>
+<pre class="hljs"><code><div>     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+ 0.ubuntu.pool.n .POOL.          16 p    -   64    0    0.000    0.000   0.000
+ 1.ubuntu.pool.n .POOL.          16 p    -   64    0    0.000    0.000   0.000
+ 2.ubuntu.pool.n .POOL.          16 p    -   64    0    0.000    0.000   0.000
+ 3.ubuntu.pool.n .POOL.          16 p    -   64    0    0.000    0.000   0.000
+ ntp.ubuntu.com  .POOL.          16 p    -   64    0    0.000    0.000   0.000
+*gw.lab.npnog.or 130.54.208.201   4 u   51   64    1   11.351   -4.360   3.053
+
+</div></code></pre>
+<p>For a reasonable discussion of what this output means see:</p>
+<p><a href="http://tech.kulish.com/2007/10/30/ntp-ntpq-output-explained/">http://tech.kulish.com/2007/10/30/ntp-ntpq-output-explained/</a></p>
+<p>To see the status of your time synchronization process type:</p>
+<pre class="hljs"><code><div>lab@srvX:~$ ntpstat
+</div></code></pre>
+<p>If your clock is properly synchronized you sould see something like:</p>
+<pre class="hljs"><code><div>synchronised to NTP server (100.68.100.254) at stratum 5
+   time correct to within 342 ms
+   polling server every 64 s
+</div></code></pre>
+<p>Your machine will now update it's time against a known good source on a regular basis.</p>
+<h3 id="viewing-log-files-in-real-time"><strong>Viewing log files in real time</strong></h3>
+<p>Log files are critical to solve problems. They reside (largely) in the /var/log/ directory.</p>
+<p>Some popular log files include:</p>
+<ul>
+<li>/var/log/syslog</li>
+<li>/var/log/apache2/access.log</li>
+<li>/var/log/mail.log</li>
+</ul>
+<p>and many more.</p>
+<p>To view the last entry in a log file, such as the system log file, type:</p>
+<pre class="hljs"><code><div>lab@srvX:~$ tail /var/<span class="hljs-built_in">log</span>/syslog
+</div></code></pre>
+<p>Some log files may require that you use &quot;sudo tail logfilename&quot; to view their contents.</p>
+<p>What's more effective is to watch a log file as you perform some action on your system. To do this open another ssh session to your server now, log in as user <strong><em>lab</em></strong> and in that other window type:</p>
+<pre class="hljs"><code><div>lab@srvX:~$ tail -f /var/<span class="hljs-built_in">log</span>/syslog
+</div></code></pre>
+<p>Now in your other window try restarting the ntp service you recently installed:</p>
+<pre class="hljs"><code><div>lab@srvX:~$ sudo systemctl restart ntp
+</div></code></pre>
+<p>You should see quite a few log messages appear in your other <em>ssh</em> window. These are real-time messages coming from the ntp service. We'll talk about logging more later in the week, but viewing your log files to debug issues is often the only way to solve a problem.</p>
+<p>In the window where you typed &quot;sudo tail -f /var/log/syslog&quot; you can press ctrl-c to exit from the tail command.</p>
+<h3 id="practice-using-the-man-command"><strong>Practice using the man command</strong></h3>
+<p>to get help on command you can use the <em>man</em> command (&quot;man&quot; is short for manual). For instance, to learn more about the <em>ssh</em> command you could do:</p>
+<pre class="hljs"><code><div>lab@srvX:~$ man ssh
+</div></code></pre>
+<p>Now you can move around the help screen quickly by using some editing tricks. Note that these tricks work if you are using the <em>less</em> command as well.</p>
+<p>Try doing the following:</p>
+<ul>
+<li>Search for “ports” by typing “/ports” – press <code>&lt;ENTER&gt;</code></li>
+<li>Press “n” to go to the next occurrence of “ports” – do this several times.</li>
+<li>Press “N” to search backwards.</li>
+<li>Press “p” to go to the start.</li>
+<li>Search on “/-p” and see what you find.</li>
+<li>Press “h” for all the keyboard shortcuts.</li>
+<li>Press “q” (twice in this case) to quit from the man page.</li>
+</ul>
+<hr>
+
+</body>
+</html>
